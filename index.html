@@ -72,8 +72,10 @@
 </html>
 <script>
 function close() {
-    document.getElementById("liquidGlass-wapper").style.display = "none";
-    console.log("Window closed");
+    const win = document.getElementById("liquidGlass-wapper");
+    win.style.display = "none";
+    win.style.opacity = "0";
+    win.style.visibility = "hidden";
 }
 function min() {
     const win = document.getElementById("liquidGlass-wapper");
