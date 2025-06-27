@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <section class="hero">
+        <div class="liquidGlass-wapper" id="liquidGlass-wapper">
+            <div class="liquidGlass-effect"></div>
+            <div class="liquidGlass-content">
+                <div class="macos-topnav">
+                    <div class="macos-window-buttons">
+                        <span class="macos-btn macos-close" onclick="close()"></span>
+                        <span class="macos-btn macos-min" onclick="min()"></span>
+                        <span class="macos-btn macos-max" onclick="full()"></span>
+                    </div>
+                    <span class="macos-title">https://amelang-lebenslauf.de</span>
+                </div>
+                <div class="macos-window-content">
+                    <iframe id="meinIframe" src="https://forgitmo.github.io/modulare-Webseite/" frameborder="0"></iframe>
+                </div>
+            </div>
+
+            <svg>
+                <filter id="glass-distortion">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="1" seed="1" result="turbulence" />
+                    <feGaussianBlur in="turbulence" stdDeviation="0" result="softMap" />
+                    <feDisplacementMap in="SourceGraphic" in2="softMap" scale="20"  />
+                </filter>
+            </svg>
+            
+        </div> 
+    </section>
+    <div class="macos-dock" id="macos-dock">
+        <div class="liquidGlass-effect dock-effect"></div>
+        <div class="liquidGlass-content" style="display: flex;  gap: 18px; padding: 10px 8px;">
+        
+            <!-- Ersetze deinen Button durch diesen Block -->
+            <div class="dropdown" style="position: relative; display: inline-block;">
+              <button class="dock-btn" onclick="toggleDropdown()">
+                <span>🗂️</span>
+              </button>
+              <div id="dropdown1" class="dropdown-content" style="display:none; position:absolute; left:0; top:-140px; background:#fff; min-width:140px; box-shadow:0 2px 8px rgba(0,0,0,0.15); border-radius:8px; z-index:1;">
+                <a href="#" onclick="setIframeUrl('https://forgitmo.github.io/modulare-Webseite/')">Lebenslauf</a>
+                <a href="#" onclick="setIframeUrl('https://traveldiary-1be283.pages.ide3.de/')">TravelDiary</a>
+                <a href="#" onclick="setIframeUrl('https://github.com/forGitMo')">GitHub</a>
+              </div>
+            </div>
+
+            <button class="dock-btn">
+              <span>
+                <a href="mailto:amelang.moritz@gmail.com" style="all:unset;cursor:pointer;">📧</a>
+              </span>
+            </button>
+           
+            <button class="dock-btn">
+              <span>
+                <a href='https://open.spotify.com/user/nightmareplayer' style="all:unset;cursor:pointer;">🎵</a>
+              </span>
+            </button>
+            <button class="dock-btn"><span>⚙️</span></button>       
+            <button id="minimized-icon" style="display:none;" onclick="restoreWindow()" class="dock-btn" title="Fenster wiederherstellen"><span></span>🌐</span></button>
+            
+        </div>
+       
+    </div>
+
+
+</body>
+</html>
+<script>
+function close() {
+    document.getElementById("liquidGlass-wapper").style.display = "none";
+    console.log("Window closed");
+}
+function min() {
+    const win = document.getElementById("liquidGlass-wapper");
+    const dock = document.getElementById("macos-dock");
+    const dockIcon = document.getElementById("minimized-icon");
+
+    // Fenster minimieren (Animation)
+    win.classList.add("minimized");
+    // Dock sichtbar machen (falls er ausgeblendet war)
+    dock.classList.remove("fullscreen");
+
+    setTimeout(() => {
+        win.style.display = "none";
+        dockIcon.style.display = "inline-block";
+        win.classList.remove("minimized"); // Reset für Restore
+    }, 600);
+}
+
+function full() {
+    const el = document.getElementById("liquidGlass-wapper");
+    el.classList.toggle("fullscreen");
+    const e = document.getElementsByClassName("macos-window-content")[0];
+    const d = document.getElementsByClassName("macos-dock")[0];
+    if (d) {
+        d.classList.toggle("fullscreen");
+    }
+    if (e) {
+        e.classList.toggle("fullscreen");
+    }
+}
+function restoreWindow() {
+    const win = document.getElementById("liquidGlass-wapper");
+    const dockIcon = document.getElementById("minimized-icon");
+    win.style.display = "";
+    // Starte im minimierten Zustand
+    win.classList.add("minimized");
+    dockIcon.style.display = "none";
+    // Im nächsten Frame entferne .minimized, damit die Transition rückwärts läuft
+    setTimeout(() => {
+        win.classList.remove("minimized");
+    }, 10);
+}
+
+function toggleDropdown() {
+  const dropdown = document.getElementById("dropdown1");
+  dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+}
+window.onclick = function(event) {
+  if (!event.target.closest('.dropdown')) {
+    const dropdown = document.getElementById("dropdown1");
+    if (dropdown && dropdown.style.display === "block") {
+      dropdown.style.display = "none";
+    }
+  }
+}
+function setIframeUrl(url) {
+  document.getElementById('meinIframe').src = url;
+  document.getElementById("dropdown1").style.display = "none";
+}
+</script>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: url('https://images.unsplash.com/photo-1749303025584-0b4e15e4146b?q=80&w=3844&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') center center / cover no-repeat fixed;
+        min-height: 100vh;
+    }
+    * {
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+    }
+    svg {
+        display: none; /* SVG-Filter nur im Hintergrund */
+    }
+    .hero {
+        position: relative;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .liquidGlass-wapper {
+        width: 700px;
+        height: 400px;
+        margin: 40px auto;
+        position: relative;
+        overflow: hidden;
+        background: rgba(255,255,255,0.5);
+        border-radius: 16px;
+        box-shadow: 0 4px 32px rgba(0,0,0,0.08);
+        transition:
+            transform 0.6s;
+        will-change: transform;
+    }
+    #liquidGlass-wapper {
+      transition: 
+        transform 0.7s cubic-bezier(.4,1.2,.4,1), 
+        opacity 0.5s cubic-bezier(.4,1.2,.4,1), 
+        width 0.7s cubic-bezier(.4,1.2,.4,1), 
+        height 0.7s cubic-bezier(.4,1.2,.4,1);
+      will-change: transform, opacity, width, height;
+    }
+
+    #liquidGlass-wapper.minimized {
+        transform: scale(0.12) translate(220px, 320px) ;
+        opacity: 0;
+        pointer-events: none;
+    }
+    .liquidGlass-wapper.fullscreen {
+      width: 100vw;
+      height: 100vh;
+      left: 0;
+      top: 0;
+      margin: 0;
+      border-radius: 0;
+      transform: none;
+    }
+    .liquidGlass-wapper.minimized {
+        transform: scale(0.1) translateY(600px);
+        pointer-events: none;
+    }
+    .liquidGlass-effect {
+        position: absolute;
+        inset: 0;
+        backdrop-filter: blur(1.5px);
+        filter: url(#glass-distortion);
+        overflow: hidden;
+    }
+    .liquidGlass-content {
+        filter: none;
+        backdrop-filter: none;
+        position: relative;
+        z-index: 1;
+    }
+    .macos-topnav {
+        display: flex;
+        align-items: center;
+        height: 38px;
+        padding: 0 16px;
+        background: rgba(255,255,255,0.6);
+        border-radius: 12px 12px 0 0;
+        box-shadow: 0 1px 8px rgba(0,0,0,0.07);
+        backdrop-filter: blur(12px);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    .macos-window-buttons {
+        display: flex;
+        gap: 8px;
+        margin-right: 16px;
+    }
+    .macos-btn {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        border: 1px solid #ddd;
+        margin-top: 2px;
+    }
+    .macos-close { background: #ff5f57; border-color: #e33e41; }
+    .macos-min   { background: #ffbd2e; border-color: #e09e3e; }
+    .macos-max   { background: #28c940; border-color: #12ac28; }
+    .macos-title {
+        font-weight: 500;
+        color: #333;
+        font-size: 15px;
+        letter-spacing: 0.1px;
+        flex: 1;
+    }
+    .macos-window-content.fullscreen {
+        height: 100vh;
+        overflow-y: auto;
+    }
+    .macos-window-content{
+        height: 362px;
+    }
+    
+    .liquidGlass-content, .liquidGlass-content iframe {
+        transform: translateZ(0);
+        will-change: transform, width, height;
+    }
+
+    .liquidGlass-content iframe {
+        flex: 1 1 0%;
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+    }
+
+    .dock-effect {
+        position: absolute;
+        inset: 0;
+        filter: url(#glass-distortion);
+        backdrop-filter: blur(1.5px);
+        z-index: 0;
+        border-radius: 22px;
+    }
+    .macos-dock {
+        display: flex;
+        gap: 18px;
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 18px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 18px;
+        box-shadow: 0 4px 32px rgba(0,0,0,0.08);
+        backdrop-filter: none; /* <-- damit nicht doppelt */
+        border: none;
+        z-index: 100;
+        overflow: visible; /* wichtig, damit Filter nicht überlappt */
+        /* Für sanfte Übergänge beim Hover */
+        will-change: transform;
+        transition: visibility 2s ease-in-out, transform 0.2s ease-in-out;
+
+    }
+    .macos-dock.fullscreen {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+    }
+
+    .dock-btn {
+        width: 48px;
+        height: 48px;
+        border-radius: 15%;
+        border: none;
+        background: rgba(255,255,255,0.85);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.7rem;
+        cursor: pointer;
+        transition:
+            transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+            box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+            background 0.18s;
+        will-change: transform;
+        z-index: 1;
+    }
+    /* Haupt-Hover-Effekt */
+    .dock-btn:hover,
+    .dock-btn:focus {
+        transform: scale(1.2) translateY(-12px);
+        z-index: 2;
+    }
+
+    /* Linker Nachbar */
+    .macos-dock:has(.dock-btn:hover) .dock-btn:hover + .dock-btn,
+    .macos-dock:has(.dock-btn:focus) .dock-btn:focus + .dock-btn {
+        transform: scale(1.15) translateY(-6px);
+        z-index: 1;
+    }
+
+    /* Rechter Nachbar */
+    .macos-dock:has(.dock-btn:hover) .dock-btn:has(+ .dock-btn:hover),
+    .macos-dock:has(.dock-btn:focus) .dock-btn:has(+ .dock-btn:focus) {
+        transform: scale(1.15) translateY(-6px);
+        z-index: 1;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+
+</style>
